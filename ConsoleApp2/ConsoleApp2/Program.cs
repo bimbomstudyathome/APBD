@@ -12,7 +12,7 @@ static void avgMethod(int[] arr)
     int sum = 0;
     foreach (var num in arr)
     {
-        sum += num;
+        sum += num + 23;
     }
     Console.WriteLine("Average is: " + (sum/arr.Length));
 }
