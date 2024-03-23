@@ -2,16 +2,16 @@
 
 public class LiquidContainer : Container, IHazardNotifier
 {
-    private bool hazardous;
-    public LiquidContainer(string serialNumber, double cargoMass, double height, double tareWeight, double depth, double maxPayload, bool hazardous) : base(serialNumber, cargoMass, height, tareWeight, depth, maxPayload)
+    private bool _hazardous;
+    public LiquidContainer(double cargoMass, double height, double tareWeight, double depth, double maxPayload, bool hazardous) : base( cargoMass, height, tareWeight, depth, maxPayload)
     {
         SerialNumber = GenerateNum("L");
-        this.hazardous = false;
+        _hazardous = false;
     }
 
     public override void LoadCargo(double mass)
     {
-        if (hazardous)
+        if (_hazardous)
         {
             if (CargoMass + mass < MaxPayload * 0.5 )
             {
@@ -45,5 +45,10 @@ public class LiquidContainer : Container, IHazardNotifier
     public void NotifyHazard(string message)
     {
         Console.WriteLine(message);
+    }
+
+    public override string ToString()
+    {
+        return base.ToString();
     }
 }

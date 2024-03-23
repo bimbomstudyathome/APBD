@@ -2,9 +2,9 @@
 
 public abstract class Container
 {
-    protected Container(string serialNumber, double cargoMass, double height, double tareWeight, double depth, double maxPayload)
+    protected Container( double cargoMass, double height, double tareWeight, double depth, double maxPayload)
     {
-        SerialNumber = serialNumber;
+        SerialNumber = "abstract";
         CargoMass = cargoMass;
         Height = height;
         TareWeight = tareWeight;
