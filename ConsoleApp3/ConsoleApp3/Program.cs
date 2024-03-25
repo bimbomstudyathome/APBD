@@ -158,7 +158,7 @@ while (isActive)
             Console.WriteLine("Choose container number");
             containerNum = int.Parse(Console.ReadLine());
             Container oldContainer = ships[int.Parse(str) - 1].Containers[containerNum - 1];
-            ships[int.Parse(str) - 1].Remove2Container(containerNum);
+            ships[int.Parse(str) - 1].RemoveContainer(containerNum);
             foreach (var arg in containers)
             {
                 Console.WriteLine($"Serial number: {arg.SerialNumber}, cargo mass: {arg.CargoMass}");
