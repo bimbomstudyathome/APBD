@@ -1,4 +1,5 @@
-﻿using ConsoleApp3;
+﻿using System.Collections;
+using ConsoleApp3;
 
 GasContainer gasContainer = new GasContainer(0, 100, 300, 30, 1000, false);
 LiquidContainer liquidContainer = new LiquidContainer(100, 100, 350, 30, 1200, false);
@@ -7,7 +8,8 @@ List<Container> containersExample = new List<Container>();
 containersExample.Add(gasContainer);
 containersExample.Add(liquidContainer);
 containersExample.Add(refrigeratedContainer);
-Ship ship = new Ship(20.2,20,6000, containersExample);
+Ship ship = new Ship(20.2,20,60000);
+ship.AddListContainers(containersExample);
 List<Ship> ships = new List<Ship>();
 List<Container> containers = new List<Container>();
 ships.Add(ship);
@@ -16,7 +18,8 @@ int containerNum;
 while (isActive)
 {
     Console.WriteLine(
-        "1 - create container\n2 - load cargo into container\n3 - add container to a ship\n4 - info about ship\n0 - exit");
+        "1 - create container\n2 - load cargo into container\n3 - add container to a ship\n4 - get general info\n5 - remove container" +
+        "\n6 - move container to another ship\n7 - unload container\n8 - replace with a different container\n9 - add list of containers\n10 - add new ship\n0 - exit");
     string str = Console.ReadLine();
     Console.WriteLine();
     switch (str)
@@ -25,27 +28,47 @@ while (isActive)
             create();
             break;
         case "2":
-            Console.WriteLine(containers);
+            foreach (var arg in containers)
+            {
+                Console.WriteLine($"Serial number: {arg.SerialNumber}, cargo mass: {arg.CargoMass}");
+            }
             Console.WriteLine("Choose order number of the container");
             containerNum = int.Parse(Console.ReadLine());
+            Console.WriteLine("Enter mass of the cargo");
             double cargo = double.Parse(Console.ReadLine());
-            containers[--containerNum].LoadCargo(cargo);
+            try
+            {
+                containers[--containerNum].LoadCargo(cargo);
+            }
+            catch (OverfillException e)
+            {
+                Console.WriteLine(e);
+            }
             break;
         case "3":
-            Console.WriteLine(containers);
+            foreach (var arg in containers)
+            {
+                Console.WriteLine($"Serial number: {arg.SerialNumber}, cargo mass: {arg.CargoMass}");
+            }
             Console.WriteLine("Choose order number of the container");
             containerNum = int.Parse(Console.ReadLine());
+            foreach (var arg in ships)
+            {
+                Console.WriteLine($"Serial number: {arg.Id}, max amount of containers: {arg.MaxContainerAmount}");
+            }
             Console.WriteLine("Choose order number of the ship");
-            Console.WriteLine(ships);
             int shipNum = int.Parse(Console.ReadLine());
             ships[--shipNum].AddContainer(containers[--containerNum]);
-            containers.RemoveAt(--containerNum);
+            containers.RemoveAt(containerNum);
             break;
         case "4":
-            Console.WriteLine(ships);
-            Console.WriteLine("Write order number: ");
+            foreach (var arg in ships)
+            {
+                Console.WriteLine($"Serial number: {arg.Id}, max amount of containers: {arg.MaxContainerAmount}");
+            }
+            Console.WriteLine("Write order number of the ship above: ");
             str = Console.ReadLine();
-            if (ships.Count <= int.Parse(str))
+            if (ships.Count >= int.Parse(str))
             {
                 ships[int.Parse(str) - 1].GetInfo();
             }
@@ -53,7 +76,137 @@ while (isActive)
             {
                 Console.WriteLine("Incorrect input");
             }
-
+            Console.WriteLine("Do you want to see information about specific container?(1 - yes, 2 - no)");
+            int choice = int.Parse(Console.ReadLine());
+            if (choice == 1)
+            {
+                Console.WriteLine("Choose container: ");
+                foreach (var arg in ships[int.Parse(str) - 1].Containers)
+                {
+                    Console.WriteLine($"Serial number: {arg.SerialNumber}, cargo mass: {arg.CargoMass}");
+                }
+                containerNum = int.Parse(Console.ReadLine());
+                Console.WriteLine(ships[int.Parse(str) - 1].Containers[containerNum - 1]);
+            }
+            break;
+        case "5":
+            Console.WriteLine("Select ship: ");
+            foreach (var arg in ships)
+            {
+                Console.WriteLine($"Serial number: {arg.Id}, max amount of containers: {arg.MaxContainerAmount}");
+            }
+            str = Console.ReadLine();
+            Console.WriteLine("Choose container: ");
+            foreach (var arg in ships[int.Parse(str) - 1].Containers)
+            {
+                Console.WriteLine($"Serial number: {arg.SerialNumber}, cargo mass: {arg.CargoMass}");
+            }
+            Console.WriteLine("Choose container number");
+            containerNum = int.Parse(Console.ReadLine());
+            containers.Add(ships[int.Parse(str) - 1 ].Containers[int.Parse(str) - 1]);
+            ships[int.Parse(str) - 1].RemoveContainer(containerNum);
+            break;
+        case "6":
+            Console.WriteLine("Select ship: ");
+            foreach (var arg in ships)
+            {
+                Console.WriteLine($"Serial number: {arg.Id}, max amount of containers: {arg.MaxContainerAmount}");
+            }
+            str = Console.ReadLine();
+            foreach (var arg in ships[int.Parse(str) - 1].Containers)
+            {
+                Console.WriteLine($"Serial number: {arg.SerialNumber}, cargo mass: {arg.CargoMass}");
+            }
+            Console.WriteLine("Choose container number");
+            containerNum = int.Parse(Console.ReadLine());
+            Console.WriteLine("Select second ship: ");
+            foreach (var arg in ships)
+            {
+                Console.WriteLine($"Serial number: {arg.Id}, max amount of containers: {arg.MaxContainerAmount}");
+            }
+            int secondShip = int.Parse(Console.ReadLine());
+            ships[secondShip - 1].AddContainer(ships[int.Parse(str) - 1].Containers[containerNum - 1]);
+            ships[int.Parse(str) - 1].RemoveContainer(containerNum );
+            break;
+        case "7":
+            Console.WriteLine("Select ship: ");
+            foreach (var arg in ships)
+            {
+                Console.WriteLine($"Serial number: {arg.Id}, max amount of containers: {arg.MaxContainerAmount}");
+            }
+            str = Console.ReadLine();
+            Console.WriteLine("Choose container: ");
+            foreach (var arg in ships[int.Parse(str) - 1].Containers)
+            {
+                Console.WriteLine($"Serial number: {arg.SerialNumber}, cargo mass: {arg.CargoMass}");
+            }
+            Console.WriteLine("Choose container number");
+            containerNum = int.Parse(Console.ReadLine());
+            ships[int.Parse(str) - 1].Containers[containerNum - 1].EmptyCargo();
+            break;
+        case "8":
+            Console.WriteLine("Select ship: ");
+            foreach (var arg in ships)
+            {
+                Console.WriteLine($"Serial number: {arg.Id}, max amount of containers: {arg.MaxContainerAmount}");
+            }
+            str = Console.ReadLine();
+            foreach (var arg in ships[int.Parse(str) - 1].Containers)
+            {
+                Console.WriteLine($"Serial number: {arg.SerialNumber}, cargo mass: {arg.CargoMass}");
+            }
+            Console.WriteLine("Choose container number");
+            containerNum = int.Parse(Console.ReadLine());
+            Container oldContainer = ships[int.Parse(str) - 1].Containers[containerNum - 1];
+            ships[int.Parse(str) - 1].Remove2Container(containerNum);
+            foreach (var arg in containers)
+            {
+                Console.WriteLine($"Serial number: {arg.SerialNumber}, cargo mass: {arg.CargoMass}");
+            }
+            Console.WriteLine("Choose a container to replacd with");
+            containerNum = int.Parse(Console.ReadLine());
+            ships[int.Parse(str) - 1].AddContainer(containers[containerNum - 1]);
+            containers.RemoveAt(containerNum - 1);
+            containers.Add(oldContainer);
+            break;
+        case "9":
+            List<Container> tempContainers = new List<Container>();
+            bool isEnough = true;
+            while (isEnough)
+            {
+                foreach (var arg in containers)
+                {
+                    Console.WriteLine($"Serial number: {arg.SerialNumber}, cargo mass: {arg.CargoMass}");
+                }
+                Console.WriteLine("Choose order number of the container");
+                containerNum = int.Parse(Console.ReadLine());
+                tempContainers.Add(containers[containerNum - 1]);
+                containers.RemoveAt(containerNum - 1);
+                Console.WriteLine("That's all?(yes/no)");
+                str = Console.ReadLine();
+                if (str == "yes")
+                {
+                    isEnough = false;
+                }
+            }
+            foreach (var arg in ships)
+            {
+                Console.WriteLine($"Serial number: {arg.Id}, max amount of containers: {arg.MaxContainerAmount}");
+            }
+            Console.WriteLine("Choose order number of the ship");
+            str = Console.ReadLine();
+            ships[int.Parse(str) - 1].AddListContainers(tempContainers);
+            tempContainers = null;
+            break;
+        case "10":
+            Console.WriteLine("Enter max speed");
+            double maxSpeed = double.Parse(Console.ReadLine());
+            Console.WriteLine("Enter max amount of containers");
+            int maxAmount = int.Parse(Console.ReadLine());
+            Console.WriteLine("Enter max weight of teh ship");
+            double maxWeight = double.Parse(Console.ReadLine());
+            Ship temp = new Ship(maxSpeed, maxAmount, maxWeight);
+            ships.Add(temp);
             break;
         case "0":
             break;

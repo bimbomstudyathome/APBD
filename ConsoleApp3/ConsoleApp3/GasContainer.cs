@@ -33,6 +33,6 @@ public class GasContainer : Container, IHazardNotifier
 
     public override string ToString()
     {
-        return base.ToString();
+        return CargoMass + " " + SerialNumber + " " + TareWeight + " " + Depth + " " + Height;
     }
 }

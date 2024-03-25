@@ -32,6 +32,6 @@ public class RefrigeratedContainer : Container
 
     public override string ToString()
     {
-        return base.ToString();
+        return CargoMass + " " + SerialNumber + " " + TareWeight + " " + Depth + " " + Height + "\n" + ProductType + ", " + Temperature;
     }
 }

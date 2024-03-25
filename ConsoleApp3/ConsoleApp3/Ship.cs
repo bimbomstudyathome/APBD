@@ -9,13 +9,13 @@ public class Ship
     public double MaxWeight{ get; set; }    
     public List<Container> Containers { get; set; }
 
-    public Ship(double maxSpeed, int maxContainerAmount, double maxWeight, List<Container> containers)
+    public Ship(double maxSpeed, int maxContainerAmount, double maxWeight)
     {
         Id = Count++;
         MaxSpeed = maxSpeed;
         MaxContainerAmount = maxContainerAmount;
         MaxWeight = maxWeight;
-        Containers = containers;
+        Containers = new List<Container>();
     }
 
     public void AddContainer(Container container)
@@ -37,11 +37,19 @@ public class Ship
         }
     }
 
+    public void AddListContainers(List<Container> containers)
+    {
+        foreach (var container in containers)
+        {
+            AddContainer(container);
+        }
+    }
+
     public void RemoveContainer(int Num)
     {
         if (Containers.Count() >= Num)
         {
-            Containers.RemoveAt(--Num);
+            Containers.RemoveAt(Num - 1);
         }
         else
         {
@@ -58,7 +66,7 @@ public class Ship
         Console.WriteLine("All containers on the ship: ");
         foreach (var container in Containers)
         {
-            Console.WriteLine($"Container number: {container.SerialNumber}, current cargo weight: {container.CargoMass}\n");
+            Console.WriteLine($"Container number: {container.SerialNumber}, current cargo weight: {container.CargoMass}");
         }
         
     }
