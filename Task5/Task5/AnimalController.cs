@@ -82,7 +82,7 @@ public class AnimalsController : ControllerBase
         using var cmd = new SqlCommand();
         cmd.Connection = con;
         cmd.CommandText =
-            "UPDATE Animal SET Name = @Name, Description = @Description, Category = @Category, Area = @Area WHERE Id = @Id";
+            "UPDATE Animals SET Name = @Name, Description = @Description, Category = @Category, Area = @Area WHERE Id = @Id";
         cmd.Parameters.AddWithValue("@Name", animal.Name);
         cmd.Parameters.AddWithValue("@Description", animal.Description);
         cmd.Parameters.AddWithValue("@Category", animal.Category);
@@ -103,7 +103,7 @@ public class AnimalsController : ControllerBase
         using var cmd = new SqlCommand();
         cmd.Connection = con;
         cmd.CommandText =
-            "DELETE FROM Animal WHERE Id = @Id";
+            "DELETE FROM Animals WHERE Id = @Id";
         cmd.Parameters.AddWithValue("@Id", idAnimal);
         cmd.ExecuteNonQuery();
         return NoContent();
