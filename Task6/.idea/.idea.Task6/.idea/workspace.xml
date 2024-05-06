@@ -9,19 +9,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2215848a-3e89-4212-8c38-fd31fbe05c6a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../TestExample/TestExample/Controllers/AnimalsController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../TestExample/TestExample/Models/Animal.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../TestExample/TestExample/Models/AnimalsDTOs.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../TestExample/TestExample/Models/Owner.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../TestExample/TestExample/Models/Procedure.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../TestExample/TestExample/Models/Procedure_Animal.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../TestExample/TestExample/Repositories/AnimalsRepository.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../TestExample/TestExample/Repositories/IAnimalsRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Task6/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Task6/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Task6/Models/Product.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Task6/Models/Product.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Task6/WarehouseController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Task6/WarehouseController.cs" afterDir="false" />
-    </list>
+    <list default="true" id="2215848a-3e89-4212-8c38-fd31fbe05c6a" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -126,6 +114,7 @@
       <workItem from="1715029124811" duration="109000" />
       <workItem from="1715030175607" duration="9000" />
       <workItem from="1715034521509" duration="24000" />
+      <workItem from="1715035081608" duration="643000" />
     </task>
     <servers />
   </component>

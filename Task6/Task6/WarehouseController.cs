@@ -59,19 +59,19 @@ public class WarehouseController : ControllerBase
         }
         cmd.CommandText = "UPDATE [Order] SET FulfilledAt = @FulfilledAt where IdOrder = @IdOrder ";
         cmd.Parameters.AddWithValue("@FulfilledAt", DateTime.Now);
-        cmd.ExecuteNonQueryAsync();
+        await cmd.ExecuteNonQueryAsync();
         
         cmd.CommandText = "SELECT Price from Product where IdProduct = @IdProduct";
-        double ProductPrice = Convert.ToDouble(cmd.ExecuteScalar());
+        double ProductPrice = Convert.ToDouble(await cmd.ExecuteScalarAsync());
         cmd.Parameters.AddWithValue("@Price", ProductPrice);
         
-        cmd.DisposeAsync();
+        await cmd.DisposeAsync();
         
         cmd.CommandText =
             "INSERT INTO Product_Warehouse (IdWarehouse, IdProduct, IdOrder, Amount, Price, CreatedAt)" +
             "VALUES (@IdWarehouse, @IdProduct, @IdOrder, @Amount, @Price, @FulfilledAt)";
         
-        cmd.ExecuteNonQueryAsync();
+        await cmd.ExecuteNonQueryAsync();
 
         cmd.CommandText = "SELECT IdProductWarehouse FROM Product_Warehouse Where IdWarehouse = @IdWarehouse " +
                           "and IdProduct = @IdProduct " +
