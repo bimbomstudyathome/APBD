@@ -82,6 +82,37 @@ public class WarehouseController : ControllerBase
         int Id = (int) await cmd.ExecuteScalarAsync();
         return Ok(Id);
     }
+    
+    [HttpPost("AddUsingProcedure")]
+    public async Task<IActionResult> AddProductToWarehouseUsingProcedure([FromBody] ProductWarehouseRequest request)
+    {
+        if (request.Amount <= 0)
+        {
+            return BadRequest("Amount must be greater than zero.");
+        }
+        await using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+        {
+            connection.Open();
+            await using (var command = new SqlCommand("AddProductToWarehouse", connection))
+            {
+                command.CommandType = System.Data.CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@IdProduct", request.IdProduct);
+                command.Parameters.AddWithValue("@IdWarehouse", request.IdWarehouse);
+                command.Parameters.AddWithValue("@Amount", request.Amount);
+                command.Parameters.AddWithValue("@CreatedAt", request.CreatedAt);
+                try
+                {
+                    var NewId = Convert.ToInt32(await command.ExecuteScalarAsync());
+                    
+                    return Ok(NewId);
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(500, $"An error occured: {ex.Message}");
+                }
+            }
+        }
+    }
 
     [HttpGet]
     public IActionResult GetAllProducts()
