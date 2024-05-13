@@ -1,4 +1,5 @@
-﻿using System.Data.SqlClient;
+﻿using System.Data.Common;
+using System.Data.SqlClient;
 using TestExample.Models;
 
 namespace TestExample.Repositories;
@@ -31,7 +32,7 @@ public class AnimalsRepository : IAnimalsRepository
         await using var con = new SqlConnection(_configuration["ConnectionStrings:DefaultConnection"]);
         await using var cmd = new SqlCommand();
         cmd.Connection = con;
-        await con.OpenAsync();
+        
 
         var query = @"SELECT 
 							Animal.ID AS AnimalID,
@@ -51,47 +52,45 @@ public class AnimalsRepository : IAnimalsRepository
 							WHERE Animal.ID = @Id";
         cmd.CommandText = query;
         cmd.Parameters.AddWithValue("@Id", Id);
-
-        var reader = await cmd.ExecuteReaderAsync();
-
-        var animalIdOrdinal = reader.GetOrdinal("AnimalID");
-        var animalNameOrdinal = reader.GetOrdinal("AnimalName");
-        var animalTypeOrdinal = reader.GetOrdinal("Type");
-        var admissionDateOrdinal = reader.GetOrdinal("AdmissionDate");
-        var ownerIdOrdinal = reader.GetOrdinal("OwnerID");
-        var firstNameOrdinal = reader.GetOrdinal("FirstName");
-        var lastNameOrdinal = reader.GetOrdinal("LastName");
-        var dateOrdinal = reader.GetOrdinal("Date");
-        var procedureNameOrdinal = reader.GetOrdinal("ProcedureName");
-        var procedureDescriptionOrdinal = reader.GetOrdinal("Description");
-
-        AnimalsDTOs animalsDtOs = null;
         
-        while (await reader.ReadAsync())
+        await con.OpenAsync();
+        DbTransaction tran = await con.BeginTransactionAsync();
+        cmd.Transaction = (SqlTransaction)tran;
+        AnimalsDTOs animalsDtOs = null;
+        try
         {
-	        if (animalsDtOs == null)
+	        var reader = await cmd.ExecuteReaderAsync();
+	        while (await reader.ReadAsync())
 	        {
-		        animalsDtOs = new AnimalsDTOs()
+		        if (animalsDtOs == null)
 		        {
-			        ID = reader.GetInt32(animalIdOrdinal),
-			        Name = reader.GetString(animalNameOrdinal),
-			        Type = reader.GetString(animalTypeOrdinal),
-			        AdmissionDate = reader.GetDateTime(admissionDateOrdinal),
-			        Owner = new Owner()
+			        animalsDtOs = new AnimalsDTOs()
 			        {
-				        ID = reader.GetInt32(ownerIdOrdinal),
-				        FirstName = reader.GetString(firstNameOrdinal),
-				        LastName = reader.GetString(lastNameOrdinal)
-			        },
-			        Procedures = new List<Procedure>()
-		        };
+				        ID = Convert.ToInt32(reader["AnimalID"]),
+				        Name = reader["AnimalName"].ToString(),
+				        Type = reader["Type"].ToString(),
+				        AdmissionDate = Convert.ToDateTime(reader["AdmissionDate"]),
+				        Owner = new Owner()
+				        {
+					        ID = Convert.ToInt32(reader["OwnerID"]),
+					        FirstName = reader["FirstName"].ToString(),
+					        LastName = reader["LastName"].ToString()
+				        },
+				        Procedures = new List<Procedure>()
+			        };
+		        }
+
+		        animalsDtOs.Procedures.Add(new Procedure()
+		        {
+			        Name = reader["ProcedureName"].ToString(),
+			        Description = reader["ProcedureName"].ToString(),
+			        Date = Convert.ToDateTime(reader["Date"])
+		        });
 	        }
-	        animalsDtOs.Procedures.Add(new Procedure()
-	        {
-		        Name = reader.GetString(procedureNameOrdinal),
-		        Description = reader.GetString(procedureDescriptionOrdinal),
-		        Date = reader.GetDateTime(dateOrdinal)
-	        });
+        }
+        catch (Exception e)
+        {
+	        await tran.RollbackAsync();
         }
 
         return animalsDtOs;
