@@ -372,16 +372,9 @@ namespace LinqTutorials
         /// <summary>
         ///     SELECT * FROM Emps, Depts;
         /// </summary>
-        public static IEnumerable<object> Task16()
+        public static IEnumerable<Dept> Task16()
         {
-            IEnumerable<object> result = Emps.SelectMany(emp => Depts, (emp, dept) => new 
-            {
-                Num = emp.Empno,
-                Name = emp.Ename,
-                emp.Job,
-                dept.Deptno,
-                dept.Dname
-            });
+            IEnumerable<Dept> result = Emps.SelectMany(arg => Depts, (emp, dept) => dept);
             //result =
             return result;
         }
