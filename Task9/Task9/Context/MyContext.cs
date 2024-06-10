@@ -3,10 +3,10 @@ using Task9.Models;
 
 namespace Task9.Context;
 
-public class DBContext : DbContext
+public class MyContext : DbContext
 {
-    public DBContext(DbContextOptions<DBContext> options) : base(options) { }
-    public DBContext() {}
+    public MyContext(DbContextOptions<MyContext> options) : base(options) { }
+    public MyContext() {}
     public DbSet<Prescription> Prescriptions { get; set; }
     public DbSet<PrescriptionMedicament> PrescriptionMedicaments { get; set; }
     public DbSet<Medicament> Medicaments { get; set; }
